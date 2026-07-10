@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>降水計畫 | Dewatering Plan</title>
+<script src="https://yj-chen0830.github.io/jrh-core/jrh-core.js?v=1" defer></script>
+<style>
+  :root{--navy:#0b1f3a;--navy2:#13284a;--gold:#c9a14a;--gold2:#e0bf6e;--bg:#f5f3ee;--ink:#1c2530;--line:#d8d2c2;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Noto Sans TC","Segoe UI",sans-serif;background:var(--bg);color:var(--ink);}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#f5f3ee;padding:28px 32px;}
+  header h1{margin:0;font-size:22px;}
+  header span{color:var(--gold2);font-size:13px;display:block;margin-top:4px;}
+  main{max-width:1060px;margin:0 auto;padding:28px 20px 60px;}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:24px;}
+  @media(max-width:820px){.grid{grid-template-columns:1fr;}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+  .card h2{font-size:14.5px;margin:0 0 18px;color:var(--navy);font-weight:700;display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--gold);padding-bottom:10px;}
+  label{display:block;font-size:12px;color:#666;margin:10px 0 4px;font-weight:500;}
+  input,select{width:100%;padding:8px 11px;border:1.5px solid var(--line);border-radius:7px;font-size:13.5px;background:#fafaf8;}
+  input:focus,select:focus{outline:none;border-color:var(--gold);}
+  .sec{font-size:12px;font-weight:700;color:var(--navy);margin:16px 0 6px;border-left:4px solid var(--gold);padding-left:9px;letter-spacing:.04em;text-transform:uppercase;}
+  .note{font-size:11.5px;color:#999;margin-top:12px;line-height:1.75;background:#f9f7f2;border-radius:6px;padding:9px 12px;}
+  button.calc-btn{margin-top:16px;width:100%;padding:12px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:14.5px;font-weight:700;cursor:pointer;}
+  button.calc-btn:hover{background:var(--navy2);}
+  button.pro-btn{margin-top:12px;width:100%;padding:12px;border:none;border-radius:8px;background:var(--gold);color:var(--navy);font-size:14.5px;font-weight:700;cursor:pointer;}
+  button.pro-btn:hover{filter:brightness(1.08);}
+  table{width:100%;border-collapse:collapse;margin-top:10px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  th{background:var(--navy);color:#f5f3ee;font-weight:600;font-size:12px;padding:9px 10px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--line);}
+  tr:nth-child(even) td{background:#f9f7f3;}
+  td:last-child{text-align:right;font-weight:700;}
+  .ok{color:#1a7d3a;font-weight:700;}.ng{color:#c0392b;font-weight:700;}
+  details.proc{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:#fafaf8;overflow:hidden;}
+  details.proc summary{cursor:pointer;padding:10px 14px;font-weight:700;font-size:13px;color:var(--navy);user-select:none;list-style:none;display:flex;align-items:center;gap:6px;}
+  details.proc summary::before{content:"▶";font-size:10px;transition:transform .2s;}
+  details[open].proc summary::before{transform:rotate(90deg);}
+  details.proc pre{margin:0;padding:12px 16px 16px;font-family:"Courier New",monospace;font-size:11.5px;line-height:1.9;white-space:pre-wrap;color:#2c3e50;border-top:1px solid var(--line);}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .proj-section{background:#fff;border:1px solid var(--gold);border-radius:10px;padding:18px 22px;margin-bottom:20px;}
+  .proj-section h3{margin:0 0 12px;color:var(--navy);font-size:14px;font-weight:700;}
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media(max-width:600px){.proj-grid{grid-template-columns:1fr;}}
+  .mob-tabs{display:none;}
+  @media screen and (max-width:767px){
+    .mob-tabs{display:flex;background:var(--bg);border-bottom:2px solid var(--line);margin:0 -20px 0;padding:0 20px;}
+    .mob-tab{flex:1;padding:11px 4px;text-align:center;font-size:13.5px;font-weight:700;color:#888;cursor:pointer;background:transparent;border:none;border-bottom:3px solid transparent;}
+    .mob-tab.active{color:var(--navy);border-bottom-color:var(--gold);}
+    .grid{display:block;}
+    .grid>.card{display:none;}
+    .grid>.card.mob-active{display:block;}
+  }
+  @media print{
+    header,.no-print{display:none!important;}
+    body{background:#fff;margin:0;font-size:9pt;line-height:1.5;color:#111;}
+    main{padding:0;max-width:100%!important;}
+    .grid{grid-template-columns:1fr!important;gap:10pt!important;}
+    .card{box-shadow:none!important;border:1px solid #ccc!important;border-radius:4pt!important;padding:10pt 12pt!important;break-inside:avoid;}
+    .card h2{font-size:10.5pt!important;padding-bottom:6pt!important;margin-bottom:9pt!important;}
+    label{font-size:8pt!important;margin:6pt 0 2pt!important;}
+    .sec{font-size:8pt!important;margin:10pt 0 4pt!important;}
+    .note{font-size:7.5pt!important;padding:6pt 9pt!important;}
+    table{border:1px solid #bbb!important;border-radius:0!important;margin-top:6pt!important;}
+    th{font-size:8pt!important;padding:5pt 7pt!important;background:#0b1f3a!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    td{font-size:8.5pt!important;padding:5pt 7pt!important;}
+    tr:nth-child(even) td{background:#f5f5f5!important;}
+    details.proc{display:block!important;margin-top:10pt!important;border:1pt solid #0b1f3a!important;border-radius:4pt!important;break-inside:avoid;background:#f9f9f6!important;}
+    details.proc>summary{display:none!important;}
+    details.proc::before{content:"📋  計算過程（供第三方檢核）";display:block;font-weight:700;font-size:8pt;color:#0b1f3a;padding:6pt 10pt 4pt;border-bottom:1px solid #ccc;letter-spacing:.04em;}
+    details.proc>pre{font-size:7pt!important;line-height:1.65!important;white-space:pre-wrap!important;padding:6pt 10pt 10pt!important;color:#1a1a1a!important;font-family:"Courier New",monospace!important;}
+    .proj-section{border:1.5pt solid #0b1f3a!important;border-radius:4pt!important;}
+    button.pro-btn,button.calc-btn{display:none!important;}
+    @page{margin:15mm 12mm;size:A4;}
+  }
+</style>
+</head>
+<body data-tool="dwt">
+<header>
+  <h1>💧 降水計畫</h1>
+  <span>Dewatering Plan · Dupuit 湧水量 / 井點配置 / 泵浦容量</span>
+</header>
+<main>
+
+<div class="proj-section no-print" id="projSection">
+  <h3>📁 專案資訊（列印時帶入計算書封面）</h3>
+  <div class="proj-grid">
+    <div><label>工程名稱</label><input id="pj-name" placeholder="○○大樓新建工程"></div>
+    <div><label>工程地點</label><input id="pj-loc" placeholder="台北市○○區"></div>
+    <div><label>承造廠商</label><input id="pj-contractor" placeholder="○○營造股份有限公司"></div>
+    <div><label>文件編號</label><input id="pj-docno" placeholder="DW-CAL-001"></div>
+    <div><label>計算者</label><input id="pj-calc" placeholder="姓名"></div>
+    <div><label>審核者</label><input id="pj-review" placeholder="姓名"></div>
+    <div><label>計算日期</label><input id="pj-date" type="date"></div>
+  </div>
+</div>
+
+<div class="mob-tabs">
+  <button class="mob-tab active" onclick="switchMobTab('dw-in',this)">📋 輸入參數</button>
+  <button class="mob-tab" id="mobTab-dw-r" onclick="switchMobTab('dw-r',this)">📊 計算結果</button>
+</div>
+<div class="grid">
+  <div class="card mob-active" data-tab="dw-in">
+    <h2>降水條件輸入（非受壓含水層）</h2>
+    <div class="sec">開挖幾何（深度自地表起算）</div>
+    <div class="row2">
+      <div><label>開挖長 a (m)</label><input id="dw-a" type="number" value="30" step="1" min="1"></div>
+      <div><label>開挖寬 b (m)</label><input id="dw-b" type="number" value="20" step="1" min="1"></div>
+    </div>
+    <div class="row2">
+      <div><label>開挖深度 He (m)</label><input id="dw-he" type="number" value="5.0" step="0.5" min="1"></div>
+      <div><label>水位洩降至開挖面下 (m)</label><input id="dw-mgn" type="number" value="0.5" step="0.1" min="0"></div>
+    </div>
+    <div class="sec">水文地質</div>
+    <div class="row2">
+      <div><label>原地下水位深 GL− (m)</label><input id="dw-gw" type="number" value="2.0" step="0.5" min="0"></div>
+      <div><label>不透水層深 GL− (m)</label><input id="dw-imp" type="number" value="15" step="0.5"></div>
+    </div>
+    <label>透水係數 k (m/s)</label>
+    <select id="dw-ksel" onchange="dwKChange()">
+      <option value="0.0001" selected>細砂～中砂（k≈1×10⁻⁴）</option>
+      <option value="0.001">中砂～粗砂（k≈1×10⁻³）</option>
+      <option value="0.00001">粉土質砂（k≈1×10⁻⁵）</option>
+      <option value="0.000001">粉土（k≈1×10⁻⁶）</option>
+      <option value="custom">自訂（依現地抽水試驗）</option>
+    </select>
+    <div id="dw-k-wrap" style="display:none"><label>k (m/s)</label><input id="dw-k" type="number" value="0.0001" step="0.00001"></div>
+    <div class="sec">井點（深井）</div>
+    <div class="row2">
+      <div><label>井管半徑 rw (m)</label><input id="dw-rw" type="number" value="0.15" step="0.05" min="0.03"></div>
+      <div><label>濾管有效長 lw (m)</label><input id="dw-lw" type="number" value="4.0" step="0.5" min="1"></div>
+    </div>
+    <label>湧水量安全裕度（井數計算）</label>
+    <input id="dw-fs" type="number" value="1.2" step="0.1" min="1">
+    <button class="calc-btn" onclick="calcDW()">計算降水系統</button>
+    <div class="note">Dupuit 公式適用非受壓（自由水面）含水層之完整井群。透水係數以現地抽水試驗為準，土質估計值僅供初步規劃。受壓含水層、多層地質應另以受壓井公式或數值分析檢討。</div>
+  </div>
+  <div class="card" data-tab="dw-r">
+    <h2>降水計算結果</h2>
+    <div id="dw-result"><p style="color:#888">尚未計算</p></div>
+    <details class="proc" id="dw-proc" style="display:none">
+      <summary>📋 計算過程（供第三方檢核）</summary>
+      <pre id="dw-proc-text"></pre>
+    </details>
+    <button class="pro-btn no-print" onclick="openPro()">📄 產出計算書 PDF</button>
+  </div>
+</div>
+
+</main>
+<script>
+function switchMobTab(name,btn){
+  btn.parentElement.querySelectorAll('.mob-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  btn.parentElement.nextElementSibling.querySelectorAll('.card').forEach(function(c){
+    c.classList.toggle('mob-active',c.dataset.tab===name);
+  });
+}
+function dwKChange(){document.getElementById('dw-k-wrap').style.display=document.getElementById('dw-ksel').value==='custom'?'':'none';}
+function openPro(){ JRH.checkEmail(function(){ jrhPrint('降水計畫計算書'); }); }
+function v(id){return parseFloat(document.getElementById(id).value)||0;}
+function f1(x){return x.toFixed(1);}
+function f2(x){return x.toFixed(2);}
+function f3(x){return x.toFixed(3);}
+function ex(x){return x.toExponential(1);}
+
+function calcDW(){
+  var a=v('dw-a'),b=v('dw-b'),He=v('dw-he'),mgn=v('dw-mgn');
+  var gw=v('dw-gw'),imp=v('dw-imp');
+  var k=document.getElementById('dw-ksel').value==='custom'?v('dw-k'):parseFloat(document.getElementById('dw-ksel').value);
+  var rw=v('dw-rw'),lw=v('dw-lw'),fs=v('dw-fs');
+
+  var tgt=He+mgn;                 // 目標水位深
+  var s=tgt-gw;                   // 洩降量
+  if(s<=0){document.getElementById('dw-result').innerHTML='<p class="ng">原水位已低於目標水位，無需降水。</p>';return;}
+  var H=imp-gw;                   // 含水層厚
+  var h=imp-tgt;                  // 降水後水柱
+  if(h<0){document.getElementById('dw-result').innerHTML='<p class="ng">目標水位低於不透水層，請檢查輸入。</p>';return;}
+  var r0=Math.sqrt(a*b/Math.PI);  // 等效半徑
+  var R0=3000*s*Math.sqrt(k);     // Sichardt 影響半徑
+  var Q=Math.PI*k*(H*H-h*h)/Math.log((r0+R0)/r0);  // m³/s
+  var Qd=Q*86400;                 // m³/day
+  var q1=2*Math.PI*rw*lw*Math.sqrt(k)/15;          // 單井出水能力 m³/s
+  var n=Math.ceil(fs*Q/q1);
+  var perim=2*(a+b);
+  var spacing=perim/n;
+  var pump=Q*fs*60;               // m³/min 泵浦總容量
+
+  var rows=
+    '<tr><td>洩降量 s（目標 GL−'+f1(tgt)+'m）</td><td>'+f2(s)+' m</td></tr>'+
+    '<tr><td>含水層厚 H / 降水後 h</td><td>'+f1(H)+' / '+f1(h)+' m</td></tr>'+
+    '<tr><td>等效半徑 r₀＝√(ab/π)</td><td>'+f1(r0)+' m</td></tr>'+
+    '<tr><td>影響半徑 R₀＝3000·s·√k</td><td>'+f1(R0)+' m</td></tr>'+
+    '<tr><td>總湧水量 Q（Dupuit）</td><td>'+f3(Q*1000)+' L/s（'+f1(Qd)+' m³/day）</td></tr>'+
+    '<tr><td>單井出水能力 q</td><td>'+f3(q1*1000)+' L/s</td></tr>'+
+    '<tr><td>所需井數 n＝'+fs+'Q/q</td><td>'+n+' 口</td></tr>'+
+    '<tr><td>沿周長配置間距（周長 '+f1(perim)+'m）</td><td>'+f1(spacing)+' m</td></tr>'+
+    '<tr><td>泵浦總容量建議（×'+fs+'）</td><td>'+f2(pump)+' m³/min</td></tr>';
+  document.getElementById('dw-result').innerHTML='<table><tr><th>項目</th><th>數值</th></tr>'+rows+'</table>';
+
+  var p='';
+  p+='【降水計畫計算 · Dupuit 井群公式（非受壓含水層）】\n\n';
+  p+='一、設計條件\n';
+  p+='  開挖 '+f1(a)+'×'+f1(b)+' m，深 He = '+f1(He)+' m\n';
+  p+='  原地下水位 GL−'+f1(gw)+' m，目標水位 GL−'+f1(tgt)+' m（開挖面下 '+f1(mgn)+' m）\n';
+  p+='  不透水層 GL−'+f1(imp)+' m，k = '+ex(k)+' m/s\n\n';
+  p+='二、幾何與水文參數\n';
+  p+='  洩降量 s = '+f1(tgt)+' − '+f1(gw)+' = '+f2(s)+' m\n';
+  p+='  含水層厚 H = '+f1(imp)+' − '+f1(gw)+' = '+f1(H)+' m；降水後 h = '+f1(h)+' m\n';
+  p+='  等效半徑 r₀ = √(a·b/π) = √('+f1(a)+'×'+f1(b)+'/π) = '+f1(r0)+' m\n';
+  p+='  影響半徑 R₀ = 3000·s·√k = 3000×'+f2(s)+'×√'+ex(k)+' = '+f1(R0)+' m（Sichardt）\n\n';
+  p+='三、總湧水量（Dupuit）\n';
+  p+='  Q = πk(H²−h²)/ln((r₀+R₀)/r₀)\n';
+  p+='    = π×'+ex(k)+'×('+f1(H)+'²−'+f1(h)+'²)/ln('+f1(r0+R0)+'/'+f1(r0)+')\n';
+  p+='    = '+f3(Q*1000)+' L/s = '+f1(Qd)+' m³/day\n\n';
+  p+='四、井點配置\n';
+  p+='  單井出水能力 q = 2π·rw·lw·√k/15 = '+f3(q1*1000)+' L/s（Sichardt 井壁滲入限制）\n';
+  p+='  所需井數 n = '+fs+'×Q/q = '+f2(fs*Q/q1)+' → 採用 '+n+' 口\n';
+  p+='  沿開挖周長（'+f1(perim)+' m）均佈，間距約 '+f1(spacing)+' m\n\n';
+  p+='五、泵浦容量\n';
+  p+='  總抽水量 ≥ '+fs+'×Q = '+f2(pump)+' m³/min，另備援 1 台\n';
+  p+='  揚程需求＝井深＋地面排水管損失，請以壓力管揚程計算工具複核。\n\n';
+  p+='六、注意事項\n';
+  p+='  降水引致之有效應力增加將造成周邊地層壓密沉陷，鄰房、管線應評估\n';
+  p+='  影響並設置觀測井、沉陷觀測點；必要時採回灌井減緩水位洩降影響。\n';
+  document.getElementById('dw-proc-text').textContent=p;
+  document.getElementById('dw-proc').style.display='';
+  if(window.innerWidth<768){var b2=document.getElementById('mobTab-dw-r');if(b2)switchMobTab('dw-r',b2);}
+}
+</script>
+<script>
+window.jrhDocMeta={
+ "doc": "降水計畫計算書",
+ "codes": [
+  "內政部「建築物基礎構造設計規範」（地下水處理）",
+  "Dupuit 井群理論、Sichardt 影響半徑經驗式",
+  "勞動部「營造安全衛生設施標準」（開挖排水）",
+  "「建築物地下開挖工程鄰房保護措施」相關規定"
+ ],
+ "notes": [
+  "透水係數 k 應以現地抽水試驗為準；本計算採用之土質估計值僅供初步規劃。",
+  "降水造成之地層壓密沉陷應評估對鄰房及地下管線之影響，並設置水位觀測井與沉陷觀測點。",
+  "多層地質、受壓含水層或止水壁未貫入不透水層時，應以受壓井公式或滲流數值分析另行檢討。",
+  "抽出之地下水排放應符合放流規定，含砂量過高時應設沉砂設施。",
+  "泵浦應有備援機組並配置停電警報；降水中斷對開挖安全影響重大。",
+  "開挖底面應檢核上舉（uplift）與砂湧穩定，本計算未包含者另行檢討。",
+  "本計算書應經大地工程技師簽證後，始得作為正式送審文件。"
+ ]
+};
+</script>
+</body>
+</html>
