@@ -157,6 +157,17 @@ function switchMobTab(name,btn){
   });
 }
 function dwKChange(){document.getElementById('dw-k-wrap').style.display=document.getElementById('dw-ksel').value==='custom'?'':'none';}
+
+function jrhTryInbound(){
+  if(!(window.JRH && JRH.showInboundBanner))return;
+  JRH.showInboundBanner('pta','抽水試驗分析',function(data){
+    document.getElementById('dw-ksel').value='custom';
+    dwKChange();
+    document.getElementById('dw-k').value=data.k_m_s;
+  });
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',jrhTryInbound);
+else jrhTryInbound();
 function openPro(){ JRH.checkEmail(function(){ jrhPrint('降水計畫計算書'); }); }
 function v(id){return parseFloat(document.getElementById(id).value)||0;}
 function f1(x){return x.toFixed(1);}
